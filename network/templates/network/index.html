@@ -1,0 +1,46 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+        <form action="{% url 'create_post' %}" method="POST">
+            {% csrf_token %}
+            <strong class="center"><p>Create a post!</p></strong>
+            <!-- TODO: will make the text area smaller and add js so that it gets bigger when clicked on.-->
+            <textarea style="height: 80px; width: 100%; resize: none" name="post" required></textarea>
+            <br>
+            <input class="btn btn-primary" style="width: 100%;" type="submit" value="Post">
+            <hr style="border-top: 4px solid black">
+        </form>
+    {% else %}
+        <strong class="center"><p><a class="center" href="{% url 'login' %}">Log-in</a> to create a post.</p></strong>
+        <hr style="border-top: 4px solid black">
+    {% endif %}
+
+    {% for post in posts %}
+    <div class="eachpost">
+        <h6>{{ post.creator }}</h6>
+        <p>{{ post.post }}</p>
+        <p style="font-size: 14px">{{ post.created }}</p>
+
+        {% if user.is_authenticated %}
+            {% if post.id in posts_lbtcu_id %}
+            <form action="{% url 'decrease_likes' post.id %}">
+                <button id="like" style="font-size: 16px; padding: 0; border: none; background: none" ><i class="fa fa-heart" style="font-size:16px; color:rgb(255, 9, 9)"></i></button>
+                {{ post.likes_count }}
+            </form>
+            {% else %}
+            <form action="{% url 'increase_likes' post.id %}">
+                <button id="like" style="font-size: 16px; padding: 0; border: none; background: none" ><i class="fa fa-heart-o" style="font-size:16px; color:rgb(255, 9, 9)"></i></button>
+                {{ post.likes_count }}
+            </form>
+            {% endif %}
+        {% else %}
+            <i class="fa fa-heart-o" style="font-size:16px; color:rgb(255, 9, 9)"></i> {{ post.likes_count }}
+        {% endif %}
+
+        <a href="{% url 'comments' post.id %}">Comments</a>
+    </div>
+    <br>
+    {% endfor %}
+    
+{% endblock %}

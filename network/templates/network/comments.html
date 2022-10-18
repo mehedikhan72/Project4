@@ -1,0 +1,35 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    
+    <h6>{{ post.creator }}</h6>
+    <p>{{ post.post }}</p>
+    <p style="font-size: 14px">{{ post.created }}</p>   
+    <hr style="border-top: 4px solid black">
+    
+    {% if user.is_authenticated %}
+    <form action="{% url 'create_comment' post.id %}" method="POST">
+        {% csrf_token %}
+        <textarea style="height: 30px; width: 100%; resize: none" name="comment" placeholder="Add a comment" required></textarea>
+        <br>
+        <input class="btn btn-primary" style="width: 100%;" type="submit" value="Comment">
+        <hr style="border-top: 4px solid black">
+    </form>
+    {% else %}
+        <strong class="center"><p><a class="center" href="{% url 'login' %}">Log-in</a> to create a comment.</p></strong>
+        <hr style="border-top: 4px solid black">
+    {% endif %}
+    <strong>Comments</strong>
+    <br>
+    <br>
+    {% for comment in comments %}
+    <div class="eachpost">
+        <strong>{{ comment.creator }}</strong>
+        <br>
+        {{ comment.comment }}
+        <br>
+        {{ comment.created }}
+    </div>
+    <br>
+    {% endfor %}
+{% endblock %}
