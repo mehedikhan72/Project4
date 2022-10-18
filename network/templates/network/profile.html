@@ -6,9 +6,9 @@
     <br>
     <strong>Joined: </strong> {{ profile_user.date_joined.date }}
     <br>
-    <strong>Followers: {{ profile_user.followers.count }}</strong>
+    <strong>Followers: {{ profile_user.following.count }}</strong>
     <br>
-    <strong>Following: {{ profile_user.following.count }}</strong>
+    <strong>Following: {{ profile_user.followers.count }}</strong>
     <br>
     {% if user.is_authenticated %}
         {% if user.username != profile_user.username %}

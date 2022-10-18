@@ -86,11 +86,16 @@ def create_comment(request, id):
 
 @login_required
 def profile(request, username):
-    if request.user.is_authenticated:
-        current_user = request.user.username
 
-    profile_user = User.objects.filter(username=username).values().get()
+    profile_user = User.objects.filter(username=username)[0]
     posts = Post.objects.filter(creator=username).values()
+    
+    f = User.objects.get(username=username)
+    f1 = f.following.all()
+    f2 = f.followers.all()
+    
+    print(f1)
+    print(f2)
 
     return render(request, "network/profile.html", {
         "profile_user" : profile_user,
@@ -98,12 +103,12 @@ def profile(request, username):
     })
 
 @login_required
-def follow_toggle(request, profile_owner):
-    profile_owner_obj = User.objects.get(username=profile_owner)
-    current_user_obj = User.objects.get(username=request.user.username)
+def follow_toggle(request, username):
+    profile_owner_obj = User.objects.get(username=username)
+    current_user_obj = request.user
     following = profile_owner_obj.following.all()
 
-    if profile_owner != current_user_obj.username:
+    if username != current_user_obj.username:
         if current_user_obj in following:
             profile_owner_obj.following.remove(current_user_obj.id)
         else:
