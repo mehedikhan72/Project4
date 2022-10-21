@@ -1,3 +1,4 @@
+from ast import Delete
 from locale import currency
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -5,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from .models import User, Post, Comment
 
@@ -23,9 +25,17 @@ def index(request):
     except UnboundLocalError:
         posts_lbtcu_id = None
 
+    posts = Post.objects.all().order_by('-id')
+
+    # Using paginator
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "network/index.html", {
-        "posts" : Post.objects.all(),
-        "posts_lbtcu_id" : posts_lbtcu_id
+        "posts" : posts,
+        "posts_lbtcu_id" : posts_lbtcu_id,
+        "page_obj" : page_obj
     })
 
 @login_required
@@ -85,34 +95,64 @@ def create_comment(request, id):
     pass
 
 @login_required
+def following_posts(request):
+    current_user = request.user.username
+
+    u = User.objects.get(username=current_user)
+    f = u.following.all()
+    following_list = []
+
+    for user in f:
+        following_list.append(user.username)
+
+    posts = Post.objects.filter(creator__in=following_list).order_by('-id')
+
+    # Using paginator
+    paginator = Paginator(posts, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "network/following.html",{
+        "posts" : posts,
+        "following_list" : following_list,
+        "page_obj" : page_obj
+    })
+
+@login_required
 def profile(request, username):
 
     profile_user = User.objects.filter(username=username)[0]
-    posts = Post.objects.filter(creator=username).values()
+    posts = Post.objects.filter(creator=username).values().order_by('-id')
     
-    f = User.objects.get(username=username)
-    f1 = f.following.all()
-    f2 = f.followers.all()
+    # f = User.objects.get(username=username)
+    # f1 = f.followers.all()
+    # f2 = f.following.all()
     
-    print(f1)
-    print(f2)
+    # print(f1)
+    # print(f2)
+
+    # Using paginator
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     return render(request, "network/profile.html", {
         "profile_user" : profile_user,
-        "posts" : posts
+        "posts" : posts,
+        "page_obj" : page_obj
     })
 
 @login_required
 def follow_toggle(request, username):
     profile_owner_obj = User.objects.get(username=username)
     current_user_obj = request.user
-    following = profile_owner_obj.following.all()
+    followers = profile_owner_obj.followers.all()
 
     if username != current_user_obj.username:
-        if current_user_obj in following:
-            profile_owner_obj.following.remove(current_user_obj.id)
+        if current_user_obj in followers:
+            profile_owner_obj.followers.remove(current_user_obj.id)
         else:
-            profile_owner_obj.following.add(current_user_obj.id)
+            profile_owner_obj.followers.add(current_user_obj.id)
     
     return HttpResponseRedirect(reverse('profile', args=[profile_owner_obj.username]))
 

@@ -4,21 +4,21 @@
     {% if user.is_authenticated %}
         <form action="{% url 'create_post' %}" method="POST">
             {% csrf_token %}
-            <strong class="center"><p>Create a post!</p></strong>
+            <strong class="center"><p>Create a post, {{ user.username }}!</p></strong>
             <!-- TODO: will make the text area smaller and add js so that it gets bigger when clicked on.-->
-            <textarea style="height: 80px; width: 100%; resize: none" name="post" required></textarea>
+            <textarea id="textarea_id" class="textarea_light" name="post" required></textarea>
             <br>
             <input class="btn btn-primary" style="width: 100%;" type="submit" value="Post">
-            <hr style="border-top: 4px solid black">
+            <hr class="hr_light" id="hr">
         </form>
     {% else %}
         <strong class="center"><p><a class="center" href="{% url 'login' %}">Log-in</a> to create a post.</p></strong>
-        <hr style="border-top: 4px solid black">
+        <hr class="hr_light" id="hr">
     {% endif %}
 
-    {% for post in posts %}
-    <div class="eachpost">
-        <h6>{{ post.creator }}</h6>
+    {% for post in page_obj %}
+    <div class="eachpost" id="post_box">
+        <h6><a class="link_light link_class" href="{% url 'profile' post.creator %}">{{ post.creator }}</a></h6>
         <p>{{ post.post }}</p>
         <p style="font-size: 14px">{{ post.created }}</p>
 
@@ -36,11 +36,46 @@
             {% endif %}
         {% else %}
             <i class="fa fa-heart-o" style="font-size:16px; color:rgb(255, 9, 9)"></i> {{ post.likes_count }}
+            <br>
         {% endif %}
 
-        <a href="{% url 'comments' post.id %}">Comments</a>
+        <a class="link_light small_link link_class" href="{% url 'comments' post.id %}">Comments</a>
+        <br>
+        <!-- {% if post.creator == user.username %}
+            <button class="edit_button">Edit this post.</button>
+            <div id="edit_post" class="edit_post">
+                <span><strong>Edit this post</strong> <button class="cancel_edit" style="text-align: right !important">Cancel</button></span>
+                <br>
+            </div>
+        {% endif %} -->
     </div>
     <br>
     {% endfor %}
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{page_obj.previous_page_number}}">{{ page_obj.previous_page_number }}</a></li>
+            {% endif %}
+            <li class="page-item"><a class="page-link" href="?page={{page_obj.number}}">{{ page_obj.number }}</a></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">{{ page_obj.next_page_number }}</a></li>
+            {% endif %}
+            {% if page_obj.has_next%}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+      </nav>
     
 {% endblock %}

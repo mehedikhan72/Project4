@@ -5,7 +5,7 @@ from django.utils import timezone
 
 
 class User(AbstractUser):
-    following = models.ManyToManyField('self', blank=True, related_name="followers", symmetrical=False)
+    followers = models.ManyToManyField('self', blank=True, related_name="following", symmetrical=False)
 
 class Post(models.Model):
     post = models.TextField()

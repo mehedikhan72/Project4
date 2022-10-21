@@ -5,26 +5,25 @@
     <h6>{{ post.creator }}</h6>
     <p>{{ post.post }}</p>
     <p style="font-size: 14px">{{ post.created }}</p>   
-    <hr style="border-top: 4px solid black">
     
     {% if user.is_authenticated %}
     <form action="{% url 'create_comment' post.id %}" method="POST">
         {% csrf_token %}
-        <textarea style="height: 30px; width: 100%; resize: none" name="comment" placeholder="Add a comment" required></textarea>
+        <textarea style="height: 30px; width: 100%;" id="textarea_id" class="textarea_light" name="comment" placeholder="Add a comment" required></textarea>
         <br>
-        <input class="btn btn-primary" style="width: 100%;" type="submit" value="Comment">
-        <hr style="border-top: 4px solid black">
+        <input class="btn-sm btn-primary" style="width: 100%; text-align: center; padding-top: 0px" type="submit" value="Comment">
+        <hr class="hr_light" id="hr">
     </form>
     {% else %}
         <strong class="center"><p><a class="center" href="{% url 'login' %}">Log-in</a> to create a comment.</p></strong>
-        <hr style="border-top: 4px solid black">
+        <hr class="hr_light" id="hr">
     {% endif %}
     <strong>Comments</strong>
     <br>
     <br>
     {% for comment in comments %}
-    <div class="eachpost">
-        <strong>{{ comment.creator }}</strong>
+    <div class="eachpost" id="post_box">
+        <strong><a class="link_light link_class" href="{% url 'profile' comment.creator %}">{{ comment.creator }}</a></strong>
         <br>
         {{ comment.comment }}
         <br>
