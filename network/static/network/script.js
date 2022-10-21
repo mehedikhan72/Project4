@@ -94,17 +94,127 @@ document.addEventListener('DOMContentLoaded', function(){
 })
 
 // Edit post
+document.addEventListener('DOMContentLoaded', function(){
 
-document.addEventListener('click', event =>{
-    let elem = event.target;
+    document.addEventListener('click', event =>{
+        let elem = event.target;
 
-    if(elem.className === 'edit_button'){
-        document.querySelector("#edit_post").classList.remove("edit_post");
-        document.querySelector("#edit_post").classList.add("edit_post_clicked");
-    }
+        if(elem.className === 'edit_button'){
+            post_id = elem.dataset.post_id;
+        }
+        
+        if(elem.className === 'edit_button'){
+            edit_btn(post_id);
+            // document.querySelector("#edit_post").classList.remove("edit_post");
+            // document.querySelector("#edit_post").classList.add("edit_post_clicked");
+            // // console.log(post_id);
 
-    if(elem.className === 'cancel_edit'){
+            // fetch(`post/${post_id}`)
+            // .then(response => response.json())
+            // .then(post => {
+            //     console.log(post);
+            //     document.querySelector("#textarea_edit").append(post[0].fields.post);
+            // });
+        }
+
+        if(elem.className === 'cancel_edit'){
+            cancel_btn(post_id);
+            // document.querySelector("#edit_post").classList.remove("edit_post_clicked");
+            // document.querySelector("#edit_post").classList.add("edit_post");
+            // document.querySelector("#textarea_edit").value= '';
+            // console.log(post_id);
+        }
+
+        if(elem.className === 'save_edit'){
+            save_btn(post_id);
+            // new_post_content = document.querySelector('#textarea_edit').value;
+            // fetch(`save_edited_post/${post_id}`, {
+            //     method: 'POST',
+            //     credentials : 'same-origin',
+            //     headers : {
+            //         "Accept" : 'application/json',
+            //         'X-Requested-With'  : 'XMLHttpRequest',
+            //         'X-CSRFToken' : getCookie("csrftoken"),
+            //     },
+            //     body: JSON.stringify({'new_post_content' : new_post_content})
+            // })
+            // .then(response => response.json())
+            // .then(post => {
+            //     new_content = post[0].fields.post;
+            //     console.log(new_content);
+
+            //     document.querySelector("#edit_post").classList.remove("edit_post_clicked");
+            //     document.querySelector("#edit_post").classList.add("edit_post");
+            //     document.querySelector("#textarea_edit").innerHTML = '';
+
+            //     e = document.getElementById(post_id);
+            //     e.innerHTML = new_content;
+            // })
+        }
+    })
+})
+function edit_btn(post_id){
+    document.querySelector("#edit_post").classList.remove("edit_post");
+    document.querySelector("#edit_post").classList.add("edit_post_clicked");
+    // console.log(post_id);
+
+    fetch(`post/${post_id}`)
+    .then(response => response.json())
+    .then(post => {
+        console.log("edit button clicked");
+        console.log(post_id);
+        document.querySelector("#textarea_edit").append(post[0].fields.post);
+    });
+}
+
+function cancel_btn(post_id){
+    document.querySelector("#edit_post").classList.remove("edit_post_clicked");
+    document.querySelector("#edit_post").classList.add("edit_post");
+    document.querySelector("#textarea_edit").value= '';
+    console.log("cancel button clicked");
+    console.log(post_id);
+}
+
+function save_btn(post_id){
+    new_post_content = document.querySelector('#textarea_edit').value;
+    fetch(`save_edited_post/${post_id}`, {
+        method: 'POST',
+        credentials : 'same-origin',
+        headers : {
+            "Accept" : 'application/json',
+            'X-Requested-With'  : 'XMLHttpRequest',
+            'X-CSRFToken' : getCookie("csrftoken"),
+        },
+        body: JSON.stringify({'new_post_content' : new_post_content})
+    })
+    .then(response => response.json())
+    .then(post => {
+        new_content = post[0].fields.post;
+        console.log("save button clicked.");
+        console.log(post_id);
+
         document.querySelector("#edit_post").classList.remove("edit_post_clicked");
         document.querySelector("#edit_post").classList.add("edit_post");
+        document.querySelector("#textarea_edit").value = '';
+
+        e = document.getElementById(post_id);
+        e.innerHTML = new_content;
+    })
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
     }
-})
+    return cookieValue;
+}
+

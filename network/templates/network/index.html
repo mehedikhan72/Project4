@@ -19,7 +19,7 @@
     {% for post in page_obj %}
     <div class="eachpost" id="post_box">
         <h6><a class="link_light link_class" href="{% url 'profile' post.creator %}">{{ post.creator }}</a></h6>
-        <p>{{ post.post }}</p>
+        <p id="{{post.id}}">{{ post.post }}</p>
         <p style="font-size: 14px">{{ post.created }}</p>
 
         {% if user.is_authenticated %}
@@ -41,13 +41,17 @@
 
         <a class="link_light small_link link_class" href="{% url 'comments' post.id %}">Comments</a>
         <br>
-        <!-- {% if post.creator == user.username %}
-            <button class="edit_button">Edit this post.</button>
+        {% if post.creator == user.username %}
+            <button class="edit_button" id="edit_button_id" data-post_id="{{post.id}}">Edit this post.</button>
             <div id="edit_post" class="edit_post">
-                <span><strong>Edit this post</strong> <button class="cancel_edit" style="text-align: right !important">Cancel</button></span>
+                <span><strong>Edit this post</strong> <button class="cancel_edit">Cancel</button></span>
                 <br>
+                <br>
+                <textarea id="textarea_edit" class="textarea_light" required></textarea>
+                <br>
+                <button id="save_edit" class="save_edit">Save</button>
             </div>
-        {% endif %} -->
+        {% endif %}
     </div>
     <br>
     {% endfor %}

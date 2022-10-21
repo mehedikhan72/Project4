@@ -16,4 +16,6 @@ urlpatterns = [
     path("<int:id>/decrease_likes", views.decrease_likes, name="decrease_likes"),
     path("profile/<str:username>/follow_toggle", views.follow_toggle, name="follow_toggle"),
     path("following_posts", views.following_posts, name="following_posts"),
+    path("post/<int:id>", views.particular_post, name="particular_post"),
+    path("save_edited_post/<int:id>", views.save_edited_post, name="save_edited_post"),
 ]

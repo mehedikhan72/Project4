@@ -1,5 +1,6 @@
 from ast import Delete
 from locale import currency
+# from xxlimited import new
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -7,6 +8,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.core.serializers import serialize
+import json
 
 from .models import User, Post, Comment
 
@@ -230,3 +233,26 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+# This function is to fetch data for editing a post
+def particular_post(request, id):
+    post = Post.objects.filter(id=id)
+    post_data = serialize("json", post)
+    return HttpResponse(post_data, content_type="application/json")
+
+def save_edited_post(request, id):
+    new_post_content = json.load(request)['new_post_content']
+    print(new_post_content)
+
+    p = Post.objects.get(id=id)
+    p.post = new_post_content
+    p.save()
+
+    post = Post.objects.filter(id=id)
+    post_data = serialize("json", post)
+    
+    return HttpResponse(post_data, content_type="application/json")
+
+
+
