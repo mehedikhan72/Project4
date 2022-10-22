@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     document.addEventListener('click', event =>{
         let elem = event.target;
-
+        
         if(elem.className === 'edit_button'){
             post_id = elem.dataset.post_id;
         }
@@ -154,17 +154,19 @@ document.addEventListener('DOMContentLoaded', function(){
     })
 })
 function edit_btn(post_id){
-    document.querySelector("#edit_post").classList.remove("edit_post");
-    document.querySelector("#edit_post").classList.add("edit_post_clicked");
-    // console.log(post_id);
+    let editmenu_popup = document.querySelector('#edit_post');
+    let menu_content = document.querySelector("#textarea_edit");
 
     fetch(`post/${post_id}`)
     .then(response => response.json())
     .then(post => {
         console.log("edit button clicked");
         console.log(post_id);
-        document.querySelector("#textarea_edit").append(post[0].fields.post);
+        menu_content.value = post[0].fields.post;
     });
+
+    editmenu_popup.classList.remove("edit_post");
+    editmenu_popup.classList.add("edit_post_clicked");
 }
 
 function cancel_btn(post_id){

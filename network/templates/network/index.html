@@ -43,15 +43,15 @@
         <br>
         {% if post.creator == user.username %}
             <button class="edit_button" id="edit_button_id" data-post_id="{{post.id}}">Edit this post.</button>
-            <div id="edit_post" class="edit_post">
-                <span><strong>Edit this post</strong> <button class="cancel_edit">Cancel</button></span>
-                <br>
-                <br>
-                <textarea id="textarea_edit" class="textarea_light" required></textarea>
-                <br>
-                <button id="save_edit" class="save_edit">Save</button>
-            </div>
         {% endif %}
+        <div id="edit_post" class="edit_post">
+            <span><strong>Edit this post</strong> <button class="cancel_edit">x</button></span>
+            <br>
+            <br>
+            <textarea style="height: 64%; width: 95%" id="textarea_edit" class="textarea_light" required></textarea>
+            <br>
+            <button id="save_edit" class="save_edit">Save</button>
+        </div>
     </div>
     <br>
     {% endfor %}
