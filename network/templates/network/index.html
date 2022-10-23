@@ -41,29 +41,22 @@
             </div>
 
             <div class="col-lg-1">
-                <button class="btn-sm btn-light post_options_btn"><strong>...</strong></button>
-                <div class="post_options" data-post_id="{{post.id}}">
-                    <button class="btn btn-light save_post" data-post_id="{{post.id}}">Save Post</button>
-                    {% if post.creator == user.username %}
-                        <button class="btn btn-light edit_button" id="edit_button_id" data-post_id="{{post.id}}">Edit this post.</button>
-                    {% endif %}
-                </div>
-                <!-- {% if post.creator == user.username %}
-                    <button class="edit_button" id="edit_button_id" data-post_id="{{post.id}}">Edit post.</button>
-                {% endif %} -->
+                {% if post.creator == user.username %}
+                    <button class="btn btn-light edit_button" id="edit_button_id" data-post_id="{{post.id}}">Edit</button>
+                {% endif %}
             </div>
         </div>
     </div>
     <br>
     {% endfor %}
 
-    <div id="edit_post" class="edit_post">
-        <span><strong>Edit this post</strong> <button class="cancel_edit">x</button></span>
+    <div id="edit_post" class="edit_post edit_box_light">
+        <span><strong style="float: left;">Edit this post</strong> <button id="cancel_edit_id" class="btn btn-light cancel_edit" style="float: right;">x</button></span>
         <br>
         <br>
-        <textarea style="height: 64%; width: 95%" id="textarea_edit" class="textarea_light" required></textarea>
+        <textarea style="height: 64%; width: 98%;" id="textarea_edit" class="textarea_light" required></textarea>
         <br>
-        <button id="save_edit" class="save_edit">Save</button>
+        <button id="save_edit_id" style="width: 100%" id="save_edit" class="btn btn-primary save_edit">Save</button>
     </div>
 
     <nav aria-label="Page navigation example">

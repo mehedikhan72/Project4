@@ -44,11 +44,28 @@ document.addEventListener('DOMContentLoaded', function(){
             text_box.classList.add("textarea_dark");
         }
 
+        edit_box = document.querySelector("#textarea_edit");
+        if(edit_box){
+            edit_box.classList.remove("textarea_light");
+            edit_box.classList.add("textarea_dark");
+        }
+
+        edit_div = document.querySelector("#edit_post");
+        if(edit_div){
+            edit_div.classList.remove("edit_box_light");
+            edit_div.classList.add("edit_box_dark");
+        }
+
         hr = document.querySelector("#hr");
         if(hr){
             hr.classList.remove("hr_light");
             hr.classList.add("hr_dark");
         }
+
+        document.querySelectorAll(".btn-light").forEach(btn =>{
+            btn.classList.remove("btn-light");
+            btn.classList.add("btn-dark");
+        })
 
         checkbox.checked = true;
         sessionStorage.setItem("mode", "dark");
@@ -82,11 +99,28 @@ document.addEventListener('DOMContentLoaded', function(){
             text_box.classList.add("textarea_light");
         }
 
+        edit_box = document.querySelector("#textarea_edit");
+        if(edit_box){
+            edit_box.classList.remove("textarea_dark");
+            edit_box.classList.add("textarea_light");
+        }
+
+        edit_div = document.querySelector("#edit_post");
+        if(edit_div){
+            edit_div.classList.remove("edit_box_dark");
+            edit_div.classList.add("edit_box_light");
+        }
+
         hr = document.querySelector("#hr");
         if(hr){
             hr.classList.remove("hr_dark");
             hr.classList.add("hr_light");
         }
+
+        document.querySelectorAll(".btn-dark").forEach(btn =>{
+            btn.classList.remove("btn-dark");
+            btn.classList.add("btn-light");
+        })
 
         checkbox.checked = false;
         sessionStorage.setItem("mode", "light");
@@ -99,19 +133,19 @@ document.addEventListener('DOMContentLoaded', function(){
     document.addEventListener('click', event =>{
         let elem = event.target;
         
-        if(elem.className === 'edit_button'){
+        if(elem.id === 'edit_button_id'){
             post_id = elem.dataset.post_id;
         }
         
-        if(elem.className === 'edit_button'){
+        if(elem.id === 'edit_button_id'){
             edit_btn(post_id);
         }
 
-        if(elem.className === 'cancel_edit'){
+        if(elem.id === 'cancel_edit_id'){
             cancel_btn(post_id);
         }
 
-        if(elem.className === 'save_edit'){
+        if(elem.id === 'save_edit_id'){
             save_btn(post_id);
         }
     })

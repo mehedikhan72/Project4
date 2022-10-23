@@ -2,6 +2,12 @@
     padding: 1rem;
 }
 
+.body_while_editing{
+    padding: 1rem;
+    pointer-events: none;
+    opacity: 50%;
+}
+
 .center{
     text-align: center;
 }
@@ -29,7 +35,6 @@
 }
 
 .edit_post{
-    background-color: grey;
     display: none;
     position: fixed;
     margin: auto;
@@ -47,7 +52,6 @@
 }
 
 .edit_post_clicked{
-    background-color: grey;
     display: block;
     position: fixed;
     margin: auto;
@@ -64,6 +68,15 @@
     text-align: center;
 }
 
+.edit_box_light{
+    color: black;
+    background-color: white;
+}
+
+.edit_box_dark{
+    color: white;
+    background-color: rgb(24, 22, 22);
+}
 .textarea_light{
     height: 80px; 
     width: 100%;
