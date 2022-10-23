@@ -122,3 +122,24 @@
     width: 20px;
 }
 
+/* .like_button{
+    font-size: 16px;
+    padding: 0;
+    border: none;
+    background: none;
+}
+.like_button:active{
+    font-size: 16px;
+    padding: 0;
+    border: none;
+    background: none;
+} */
+
+.post_options_btn{
+    float: right;
+    border-radius: 50%;
+    justify-content: center;
+}
+
+
+

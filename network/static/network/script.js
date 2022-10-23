@@ -105,51 +105,14 @@ document.addEventListener('DOMContentLoaded', function(){
         
         if(elem.className === 'edit_button'){
             edit_btn(post_id);
-            // document.querySelector("#edit_post").classList.remove("edit_post");
-            // document.querySelector("#edit_post").classList.add("edit_post_clicked");
-            // // console.log(post_id);
-
-            // fetch(`post/${post_id}`)
-            // .then(response => response.json())
-            // .then(post => {
-            //     console.log(post);
-            //     document.querySelector("#textarea_edit").append(post[0].fields.post);
-            // });
         }
 
         if(elem.className === 'cancel_edit'){
             cancel_btn(post_id);
-            // document.querySelector("#edit_post").classList.remove("edit_post_clicked");
-            // document.querySelector("#edit_post").classList.add("edit_post");
-            // document.querySelector("#textarea_edit").value= '';
-            // console.log(post_id);
         }
 
         if(elem.className === 'save_edit'){
             save_btn(post_id);
-            // new_post_content = document.querySelector('#textarea_edit').value;
-            // fetch(`save_edited_post/${post_id}`, {
-            //     method: 'POST',
-            //     credentials : 'same-origin',
-            //     headers : {
-            //         "Accept" : 'application/json',
-            //         'X-Requested-With'  : 'XMLHttpRequest',
-            //         'X-CSRFToken' : getCookie("csrftoken"),
-            //     },
-            //     body: JSON.stringify({'new_post_content' : new_post_content})
-            // })
-            // .then(response => response.json())
-            // .then(post => {
-            //     new_content = post[0].fields.post;
-            //     console.log(new_content);
-
-            //     document.querySelector("#edit_post").classList.remove("edit_post_clicked");
-            //     document.querySelector("#edit_post").classList.add("edit_post");
-            //     document.querySelector("#textarea_edit").innerHTML = '';
-
-            //     e = document.getElementById(post_id);
-            //     e.innerHTML = new_content;
-            // })
         }
     })
 })
@@ -192,6 +155,8 @@ function save_btn(post_id){
     .then(response => response.json())
     .then(post => {
         new_content = post[0].fields.post;
+        likes = post[0].fields.likes_count;
+
         console.log("save button clicked.");
         console.log(post_id);
 
@@ -200,7 +165,11 @@ function save_btn(post_id){
         document.querySelector("#textarea_edit").value = '';
 
         e = document.getElementById(post_id);
-        e.innerHTML = new_content;
+        e.innerHTML = `<div id="${post.id}">
+                        ${new_content}
+                        <br>
+                        <strong>${likes} likes</strong>
+                      </div>`
     })
 }
 
@@ -218,5 +187,90 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+// Add and remove likes
+document.addEventListener('DOMContentLoaded', function(){
+    el = document.querySelectorAll('.like_button').forEach(el =>{
+        el.addEventListener('click', function(){
+            post_id = el.dataset.post_id;
+            console.log(post_id);
+            fetch(`like_data/${post_id}`)
+            .then(response => response.text())
+            .then(data =>{
+                console.log(data);
+                if(data === "False"){
+                    add_like(post_id);
+                }
+                else if(data === "True"){
+                    remove_like(post_id)
+                }
+            })
+        })
+    })
+})
+
+function add_like(post_id){
+    fetch(`increase_likes/${post_id}`, {
+        method: 'POST',
+        credentials : 'same-origin',
+        headers : {
+            "Accept" : 'application/json',
+            'X-Requested-With'  : 'XMLHttpRequest',
+            'X-CSRFToken' : getCookie("csrftoken"),
+        },
+    })
+    .then(response => response.json())
+    .then(post => {
+        new_content = post[0].fields.post;
+        likes = post[0].fields.likes_count;
+
+        e = document.getElementById(post_id);
+        e.innerHTML = `<div id="${post.id}">
+                        ${new_content}
+                        <br>
+                        <strong>${likes} likes</strong>
+                      </div>`
+
+        heart_btn = document.querySelectorAll('#heart_btn').forEach(btn =>{
+            btn_id = btn.dataset.post_id;
+            if(btn_id === post_id){
+                btn.classList.remove("fa-heart-o");
+                btn.classList.add("fa-heart");
+            }
+        })
+    })
+}
+
+function remove_like(post_id){
+    fetch(`decrease_likes/${post_id}`, {
+        method: 'POST',
+        credentials : 'same-origin',
+        headers : {
+            "Accept" : 'application/json',
+            'X-Requested-With'  : 'XMLHttpRequest',
+            'X-CSRFToken' : getCookie("csrftoken"),
+        },
+    })
+    .then(response => response.json())
+    .then(post => {
+        new_content = post[0].fields.post;
+        likes = post[0].fields.likes_count;
+
+        e = document.getElementById(post_id);
+        e.innerHTML = `<div id="${post.id}">
+                        ${new_content}
+                        <br>
+                        <strong>${likes} likes</strong>
+                      </div>`
+        heart_btn = document.querySelectorAll('#heart_btn').forEach(btn =>{
+            btn_id = btn.dataset.post_id;
+
+            if(btn_id === post_id){
+                btn.classList.remove("fa-hearto");
+                btn.classList.add("fa-heart-o");
+            }
+        })
+    })
 }
 

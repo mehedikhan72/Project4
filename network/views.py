@@ -159,30 +159,6 @@ def follow_toggle(request, username):
     
     return HttpResponseRedirect(reverse('profile', args=[profile_owner_obj.username]))
 
-def increase_likes(request, id):
-    if request.user.is_authenticated:
-        current_user = request.user.username
-    user = User.objects.filter(username=current_user).values().get()
-    user_id = user["id"]
-    Post.objects.get(id=id).likes.add(user_id)
-    p = Post.objects.get(id=id)
-    p.likes_count = p.likes_count + 1
-    p.save()
-
-    return HttpResponseRedirect(reverse("index"))
-
-def decrease_likes(request, id):
-    if request.user.is_authenticated:
-        current_user = request.user.username
-    user = User.objects.filter(username=current_user).values().get()
-    user_id = user["id"]
-    Post.objects.get(id=id).likes.remove(user_id)
-    p = Post.objects.get(id=id)
-    p.likes_count = p.likes_count - 1
-    p.save()
-    
-    return HttpResponseRedirect(reverse("index"))
-
 def login_view(request):
     if request.method == "POST":
 
@@ -241,6 +217,28 @@ def particular_post(request, id):
     post_data = serialize("json", post)
     return HttpResponse(post_data, content_type="application/json")
 
+def like_data(request, post_id):
+    if request.user.is_authenticated:
+        current_user = request.user.username
+    try:
+        user = User.objects.filter(username=current_user).values().get()
+        id = user["id"]
+        posts_lbtcu = Post.objects.filter(likes=id).values() # lbtcu = liked by the current user.
+        posts_lbtcu_id = []
+        for post in posts_lbtcu:
+            posts_lbtcu_id.append(post["id"])
+
+    except UnboundLocalError:
+        posts_lbtcu_id = None
+
+    if post_id in posts_lbtcu_id:
+        already_likes = True
+    else:
+        already_likes = False
+    
+    return HttpResponse(already_likes)
+
+
 def save_edited_post(request, id):
     new_post_content = json.load(request)['new_post_content']
     print(new_post_content)
@@ -252,6 +250,36 @@ def save_edited_post(request, id):
     post = Post.objects.filter(id=id)
     post_data = serialize("json", post)
     
+    return HttpResponse(post_data, content_type="application/json")
+
+def increase_likes(request, post_id):
+    if request.user.is_authenticated:
+        current_user = request.user.username
+    user = User.objects.filter(username=current_user).values().get()
+    user_id = user["id"]
+    Post.objects.get(id=post_id).likes.add(user_id)
+    p = Post.objects.get(id=post_id)
+    p.likes_count = p.likes_count + 1
+    p.save()
+
+    post = Post.objects.filter(id = post_id)
+    post_data = serialize("json", post)
+    
+    return HttpResponse(post_data, content_type="application/json")
+
+def decrease_likes(request, post_id):
+    if request.user.is_authenticated:
+        current_user = request.user.username
+    user = User.objects.filter(username=current_user).values().get()
+    user_id = user["id"]
+    Post.objects.get(id=post_id).likes.remove(user_id)
+    p = Post.objects.get(id=post_id)
+    p.likes_count = p.likes_count - 1
+    p.save()
+    
+    post = Post.objects.filter(id = post_id)
+    post_data = serialize("json", post)
+
     return HttpResponse(post_data, content_type="application/json")
 
 

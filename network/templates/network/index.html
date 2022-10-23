@@ -18,43 +18,53 @@
 
     {% for post in page_obj %}
     <div class="eachpost" id="post_box">
-        <h6><a class="link_light link_class" href="{% url 'profile' post.creator %}">{{ post.creator }}</a></h6>
-        <p id="{{post.id}}">{{ post.post }}</p>
-        <p style="font-size: 14px">{{ post.created }}</p>
+        <div class="row">
+            <div class="col-lg-11">
+                <h5><a class="link_light link_class" href="{% url 'profile' post.creator %}">{{ post.creator }}</a></h5>
+                <div id="{{post.id}}">
+                    {{ post.post }}
+                    <br>
+                    <strong>{{ post.likes_count }} likes</strong>
+                </div>
+                {% if user.is_authenticated %}
+                    {% if post.id in posts_lbtcu_id %}
+                        <span data-post_id="{{post.id}}" class="like_button"><i id="heart_btn" data-post_id="{{post.id}}" class="fa fa-heart" style="font-size:16px; color:rgb(255, 9, 9)"></i></span>
+                    {% else %}
+                        <span data-post_id="{{post.id}}" class="like_button"><i id="heart_btn" data-post_id="{{post.id}}" class="fa fa-heart-o" style="font-size:16px; color:rgb(255, 9, 9)"></i></span>
+                    {% endif %}
+                <br>
+                {% endif %}
+                Posted: {{ post.created }}
+                <br>
+                <a class="link_light small_link link_class" href="{% url 'comments' post.id %}">Comments</a>
+                <br>
+            </div>
 
-        {% if user.is_authenticated %}
-            {% if post.id in posts_lbtcu_id %}
-            <form action="{% url 'decrease_likes' post.id %}">
-                <button id="like" style="font-size: 16px; padding: 0; border: none; background: none" ><i class="fa fa-heart" style="font-size:16px; color:rgb(255, 9, 9)"></i></button>
-                {{ post.likes_count }}
-            </form>
-            {% else %}
-            <form action="{% url 'increase_likes' post.id %}">
-                <button id="like" style="font-size: 16px; padding: 0; border: none; background: none" ><i class="fa fa-heart-o" style="font-size:16px; color:rgb(255, 9, 9)"></i></button>
-                {{ post.likes_count }}
-            </form>
-            {% endif %}
-        {% else %}
-            <i class="fa fa-heart-o" style="font-size:16px; color:rgb(255, 9, 9)"></i> {{ post.likes_count }}
-            <br>
-        {% endif %}
-
-        <a class="link_light small_link link_class" href="{% url 'comments' post.id %}">Comments</a>
-        <br>
-        {% if post.creator == user.username %}
-            <button class="edit_button" id="edit_button_id" data-post_id="{{post.id}}">Edit this post.</button>
-        {% endif %}
-        <div id="edit_post" class="edit_post">
-            <span><strong>Edit this post</strong> <button class="cancel_edit">x</button></span>
-            <br>
-            <br>
-            <textarea style="height: 64%; width: 95%" id="textarea_edit" class="textarea_light" required></textarea>
-            <br>
-            <button id="save_edit" class="save_edit">Save</button>
+            <div class="col-lg-1">
+                <button class="btn-sm btn-light post_options_btn"><strong>...</strong></button>
+                <div class="post_options" data-post_id="{{post.id}}">
+                    <button class="btn btn-light save_post" data-post_id="{{post.id}}">Save Post</button>
+                    {% if post.creator == user.username %}
+                        <button class="btn btn-light edit_button" id="edit_button_id" data-post_id="{{post.id}}">Edit this post.</button>
+                    {% endif %}
+                </div>
+                <!-- {% if post.creator == user.username %}
+                    <button class="edit_button" id="edit_button_id" data-post_id="{{post.id}}">Edit post.</button>
+                {% endif %} -->
+            </div>
         </div>
     </div>
     <br>
     {% endfor %}
+
+    <div id="edit_post" class="edit_post">
+        <span><strong>Edit this post</strong> <button class="cancel_edit">x</button></span>
+        <br>
+        <br>
+        <textarea style="height: 64%; width: 95%" id="textarea_edit" class="textarea_light" required></textarea>
+        <br>
+        <button id="save_edit" class="save_edit">Save</button>
+    </div>
 
     <nav aria-label="Page navigation example">
         <ul class="pagination">

@@ -14,7 +14,6 @@ class Post(models.Model):
     likes_count = models.PositiveIntegerField(default=0)
     likes = models.ManyToManyField(User, blank=True, related_name="likes")
     
-
 class Comment(models.Model):
     comment = models.TextField()
     creator = models.CharField(max_length=64, blank=False)
