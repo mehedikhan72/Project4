@@ -2,15 +2,17 @@
 
 {% block body %}
     {% if user.is_authenticated %}
+    <div id="create_post">
         <form action="{% url 'create_post' %}" method="POST">
             {% csrf_token %}
             <strong class="center"><p>Create a post, {{ user.username }}!</p></strong>
-            <!-- TODO: will make the text area smaller and add js so that it gets bigger when clicked on.-->
+
             <textarea id="textarea_id" class="textarea_light" name="post" required></textarea>
             <br>
             <input class="btn btn-primary" style="width: 100%;" type="submit" value="Post">
             <hr class="hr_light" id="hr">
         </form>
+    </div>
     {% else %}
         <strong class="center"><p><a class="center" href="{% url 'login' %}">Log-in</a> to create a post.</p></strong>
         <hr class="hr_light" id="hr">
@@ -36,7 +38,7 @@
                 {% endif %}
                 Posted: {{ post.created }}
                 <br>
-                <a class="link_light small_link link_class" href="{% url 'comments' post.id %}">Comments</a>
+                    <a class="link_light small_link link_class" href="{% url 'comments' post.id %}">Comments</a>
                 <br>
             </div>
 
@@ -56,33 +58,33 @@
         <br>
         <textarea style="height: 64%; width: 98%;" id="textarea_edit" class="textarea_light" required></textarea>
         <br>
-        <button id="save_edit_id" style="width: 100%" id="save_edit" class="btn btn-primary save_edit">Save</button>
+        <button id="save_edit_id" style="width: 100%;" id="save_edit" class="btn btn-primary save_edit">Save</button>
     </div>
 
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <a class="page-link pagination_light" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
             {% endif %}
             {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{page_obj.previous_page_number}}">{{ page_obj.previous_page_number }}</a></li>
+                <li class="page-item"><a class="page-link pagination_light" href="?page={{page_obj.previous_page_number}}">{{ page_obj.previous_page_number }}</a></li>
             {% endif %}
-            <li class="page-item"><a class="page-link" href="?page={{page_obj.number}}">{{ page_obj.number }}</a></li>
+                <li class="page-item"><a class="page-link pagination_light" href="?page={{page_obj.number}}">{{ page_obj.number }}</a></li>
             {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">{{ page_obj.next_page_number }}</a></li>
+                <li class="page-item"><a class="page-link pagination_light" href="?page={{page_obj.next_page_number}}">{{ page_obj.next_page_number }}</a></li>
             {% endif %}
             {% if page_obj.has_next%}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <a class="page-link pagination_light" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
             {% endif %}
         </ul>
-      </nav>
+    </nav>
     
 {% endblock %}

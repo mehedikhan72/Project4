@@ -67,6 +67,11 @@ document.addEventListener('DOMContentLoaded', function(){
             btn.classList.add("btn-dark");
         })
 
+        document.querySelectorAll(".page-link").forEach(page =>{
+            page.classList.remove("pagination_light");
+            page.classList.add("pagination_dark");
+        })
+
         checkbox.checked = true;
         sessionStorage.setItem("mode", "dark");
     }
@@ -122,6 +127,11 @@ document.addEventListener('DOMContentLoaded', function(){
             btn.classList.add("btn-light");
         })
 
+        document.querySelectorAll(".page-link").forEach(page =>{
+            page.classList.remove("pagination_dark");
+            page.classList.add("pagination_light");
+        })
+
         checkbox.checked = false;
         sessionStorage.setItem("mode", "light");
     }
@@ -138,14 +148,45 @@ document.addEventListener('DOMContentLoaded', function(){
         }
         
         if(elem.id === 'edit_button_id'){
+
+            document.querySelectorAll("#post_box").forEach(t =>{
+                t.classList.remove('body');
+                t.classList.add('body_while_editing');
+            })
+            u = document.querySelector("#create_post");
+            if(u){
+                u.classList.remove('body');
+                u.classList.add('body_while_editing');
+            }
+
             edit_btn(post_id);
         }
 
         if(elem.id === 'cancel_edit_id'){
+            document.querySelectorAll("#post_box").forEach(t =>{
+                t.classList.add('body');
+                t.classList.remove('body_while_editing');
+            })
+            u = document.querySelector("#create_post");
+            if(u){
+                u.classList.add('body');
+                u.classList.remove('body_while_editing');
+            }
+
             cancel_btn(post_id);
         }
 
         if(elem.id === 'save_edit_id'){
+            document.querySelectorAll("#post_box").forEach(t =>{
+                t.classList.add('body');
+                t.classList.remove('body_while_editing');
+            })
+            u = document.querySelector("#create_post");
+            if(u){
+                u.classList.add('body');
+                u.classList.remove('body_while_editing');
+            }
+
             save_btn(post_id);
         }
     })
@@ -154,7 +195,7 @@ function edit_btn(post_id){
     let editmenu_popup = document.querySelector('#edit_post');
     let menu_content = document.querySelector("#textarea_edit");
 
-    fetch(`post/${post_id}`)
+    fetch(`/post/${post_id}`)
     .then(response => response.json())
     .then(post => {
         console.log("edit button clicked");
@@ -176,7 +217,7 @@ function cancel_btn(post_id){
 
 function save_btn(post_id){
     new_post_content = document.querySelector('#textarea_edit').value;
-    fetch(`save_edited_post/${post_id}`, {
+    fetch(`/save_edited_post/${post_id}`, {
         method: 'POST',
         credentials : 'same-origin',
         headers : {
@@ -229,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function(){
         el.addEventListener('click', function(){
             post_id = el.dataset.post_id;
             console.log(post_id);
-            fetch(`like_data/${post_id}`)
+            fetch(`/like_data/${post_id}`)
             .then(response => response.text())
             .then(data =>{
                 console.log(data);
@@ -245,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })
 
 function add_like(post_id){
-    fetch(`increase_likes/${post_id}`, {
+    fetch(`/increase_likes/${post_id}`, {
         method: 'POST',
         credentials : 'same-origin',
         headers : {
@@ -277,7 +318,7 @@ function add_like(post_id){
 }
 
 function remove_like(post_id){
-    fetch(`decrease_likes/${post_id}`, {
+    fetch(`/decrease_likes/${post_id}`, {
         method: 'POST',
         credentials : 'same-origin',
         headers : {

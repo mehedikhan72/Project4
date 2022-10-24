@@ -2,60 +2,75 @@
 
 {% block body %}
 
-    {% for post in page_obj %}
-        {% if post.creator in following_list %}
-            <div class="eachpost" id="post_box">
-                <h6><a class="link_light link_class" href="{% url 'profile' post.creator %}">{{ post.creator }}</a></h6>
-                <p>{{ post.post }}</p>
-                <p style="font-size: 14px">{{ post.created }}</p>
+    {% if not page_obj %}
+        <strong style="font-size: 1.5rem">You have no following posts.</strong>
+    {% else %}
+        <strong style="font-size: 1.5rem">Following Posts</strong>
+        <br>
+        <br>
+        {% for post in page_obj %}
+            {% if post.creator in following_list %}
+                <div class="eachpost" id="post_box">
+                    <div class="row">
+                        <div class="col-lg-11">
+                            <h5><a class="link_light link_class" href="{% url 'profile' post.creator %}">{{ post.creator }}</a></h5>
+                            <div id="{{post.id}}">
+                                {{ post.post }}
+                                <br>
+                                <strong>{{ post.likes_count }} likes</strong>
+                            </div>
+                            {% if user.is_authenticated %}
+                                {% if post.id in posts_lbtcu_id %}
+                                    <span data-post_id="{{post.id}}" class="like_button"><i id="heart_btn" data-post_id="{{post.id}}" class="fa fa-heart" style="font-size:16px; color:rgb(255, 9, 9)"></i></span>
+                                {% else %}
+                                    <span data-post_id="{{post.id}}" class="like_button"><i id="heart_btn" data-post_id="{{post.id}}" class="fa fa-heart-o" style="font-size:16px; color:rgb(255, 9, 9)"></i></span>
+                                {% endif %}
+                            <br>
+                            {% endif %}
+                            Posted: {{ post.created }}
+                            <br>
+                                <a class="link_light small_link link_class" href="{% url 'comments' post.id %}">Comments</a>
+                            <br>
+                        </div>
+            
+                        <div class="col-lg-1">
+                            {% if post.creator == user.username %}
+                                <button class="btn btn-light edit_button" id="edit_button_id" data-post_id="{{post.id}}">Edit</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <br>
+            {% endif %}
+        {% endfor %}
 
-                {% if user.is_authenticated %}
-                    {% if post.id in posts_lbtcu_id %}
-                    <form action="{% url 'decrease_likes' post.id %}">
-                        <button id="like" style="font-size: 16px; padding: 0; border: none; background: none" ><i class="fa fa-heart" style="font-size:16px; color:rgb(255, 9, 9)"></i></button>
-                        {{ post.likes_count }}
-                    </form>
-                    {% else %}
-                    <form action="{% url 'increase_likes' post.id %}">
-                        <button id="like" style="font-size: 16px; padding: 0; border: none; background: none" ><i class="fa fa-heart-o" style="font-size:16px; color:rgb(255, 9, 9)"></i></button>
-                        {{ post.likes_count }}
-                    </form>
-                    {% endif %}
-                {% else %}
-                    <i class="fa fa-heart-o" style="font-size:16px; color:rgb(255, 9, 9)"></i> {{ post.likes_count }}
-                    <br>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link pagination_light" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
                 {% endif %}
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link pagination_light" href="?page={{page_obj.previous_page_number}}">{{ page_obj.previous_page_number }}</a></li>
+                {% endif %}
+                    <li class="page-item"><a class="page-link pagination_light" href="?page={{page_obj.number}}">{{ page_obj.number }}</a></li>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link pagination_light" href="?page={{page_obj.next_page_number}}">{{ page_obj.next_page_number }}</a></li>
+                {% endif %}
+                {% if page_obj.has_next%}
+                    <li class="page-item">
+                        <a class="page-link pagination_light" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
 
-                <a class="link_light small_link link_class" href="{% url 'comments' post.id %}">Comments</a>
-            </div>
-            <br>
-        {% endif %}
-    {% endfor %}
-
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-            {% endif %}
-            {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{page_obj.previous_page_number}}">{{ page_obj.previous_page_number }}</a></li>
-            {% endif %}
-            <li class="page-item"><a class="page-link" href="?page={{page_obj.number}}">{{ page_obj.number }}</a></li>
-            {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">{{ page_obj.next_page_number }}</a></li>
-            {% endif %}
-            {% if page_obj.has_next%}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            {% endif %}
-        </ul>
-      </nav>
+    {% endif %}
+    
     
 {% endblock %}

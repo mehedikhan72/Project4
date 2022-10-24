@@ -18,7 +18,12 @@
         <strong class="center"><p><a class="center" href="{% url 'login' %}">Log-in</a> to create a comment.</p></strong>
         <hr class="hr_light" id="hr">
     {% endif %}
-    <strong>Comments</strong>
+    {% if not comments %}
+        <strong>No comments yet. Be the first to comment something!</strong>
+    {% else %}
+        <strong>Comments</strong>
+    {% endif %}
+    
     <br>
     <br>
     {% for comment in comments %}

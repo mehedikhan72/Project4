@@ -110,29 +110,46 @@ def following_posts(request):
 
     posts = Post.objects.filter(creator__in=following_list).order_by('-id')
 
+    try:
+        user = User.objects.filter(username=current_user).values().get()
+        id = user["id"]
+        posts_lbtcu = Post.objects.filter(likes=id).values() # lbtcu = liked by the current user.
+        posts_lbtcu_id = []
+        for post in posts_lbtcu:
+            posts_lbtcu_id.append(post["id"])
+
+    except UnboundLocalError:
+        posts_lbtcu_id = None
+
     # Using paginator
-    paginator = Paginator(posts, 3)
+    paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     return render(request, "network/following.html",{
         "posts" : posts,
         "following_list" : following_list,
-        "page_obj" : page_obj
+        "page_obj" : page_obj,
+        "posts_lbtcu_id" : posts_lbtcu_id,
     })
 
-@login_required
 def profile(request, username):
 
     profile_user = User.objects.filter(username=username)[0]
-    posts = Post.objects.filter(creator=username).values().order_by('-id')
-    
-    # f = User.objects.get(username=username)
-    # f1 = f.followers.all()
-    # f2 = f.following.all()
-    
-    # print(f1)
-    # print(f2)
+    posts = Post.objects.filter(creator=username).order_by('-id')
+
+    if request.user.is_authenticated:
+        current_user = request.user.username
+    try:
+        user = User.objects.filter(username=current_user).values().get()
+        id = user["id"]
+        posts_lbtcu = Post.objects.filter(likes=id).values() # lbtcu = liked by the current user.
+        posts_lbtcu_id = []
+        for post in posts_lbtcu:
+            posts_lbtcu_id.append(post["id"])
+
+    except UnboundLocalError:
+        posts_lbtcu_id = None
 
     # Using paginator
     paginator = Paginator(posts, 10)
@@ -142,7 +159,8 @@ def profile(request, username):
     return render(request, "network/profile.html", {
         "profile_user" : profile_user,
         "posts" : posts,
-        "page_obj" : page_obj
+        "page_obj" : page_obj,
+        "posts_lbtcu_id" : posts_lbtcu_id,
     })
 
 @login_required
@@ -215,6 +233,7 @@ def register(request):
 def particular_post(request, id):
     post = Post.objects.filter(id=id)
     post_data = serialize("json", post)
+    print(post)
     return HttpResponse(post_data, content_type="application/json")
 
 def like_data(request, post_id):
@@ -235,6 +254,7 @@ def like_data(request, post_id):
         already_likes = True
     else:
         already_likes = False
+    print(already_likes)
     
     return HttpResponse(already_likes)
 
