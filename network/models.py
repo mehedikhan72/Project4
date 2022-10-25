@@ -1,4 +1,5 @@
 from tkinter import CASCADE
+from unittest.util import _MAX_LENGTH
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
@@ -6,6 +7,9 @@ from django.utils import timezone
 
 class User(AbstractUser):
     followers = models.ManyToManyField('self', blank=True, related_name="following", symmetrical=False)
+    avatar = models.ImageField(null=True, blank=True, upload_to="images/")
+    bio = models.TextField(null=True, blank=True, max_length=264)
+    nationality = models.CharField(null=True, blank=True, max_length=64)
 
 class Post(models.Model):
     post = models.TextField()

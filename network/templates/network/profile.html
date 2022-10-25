@@ -1,30 +1,61 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <h3>{{ profile_user.username }}</h3>
-    <strong>Email address:</strong> {{ profile_user.email }}
-    <br>
-    <strong>Joined: </strong> {{ profile_user.date_joined.date }}
-    <br>
-    <strong>Followers: {{ profile_user.followers.count }}</strong>
-    <br>
-    <strong>Following: {{ profile_user.following.count }}</strong>
-    <br>
-    {% if user.is_authenticated %}
-        {% if user.username != profile_user.username %}
-            {% if user in profile_user.followers.all %}
-                <form action="{% url 'follow_toggle' profile_user.username %}" method="POST">
-                    {% csrf_token %}
-                    <button class="btn-sm btn-primary">Unfollow</button>
-                </form>
-            {% else %}
-                <form action="{% url 'follow_toggle' profile_user.username %}" method="POST">
-                    {% csrf_token %}
-                    <button class="btn-sm btn-primary">Follow</button>
-                </form>
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            <div class="circular--landscape">
+                {% if not profile_user.avatar %}
+                    <img src="/images/default-user-image.png" style="margin-left: 0">
+                {% else %}
+                    <img src="/{{ profile_user.avatar }}">
+                {% endif %}
+                
+            </div>
+            <br>
+            {% if profile_user.bio %}
+                <p style="text-align: center"><strong>{{profile_user.bio}}</strong></p> 
+            {% endif %}
+        </div>
+        
+        <div class="col-lg-6">
+            <h3>{{ profile_user.username }}</h3>
+            <strong>Email address:</strong> {{ profile_user.email }}
+            <br>
+            <strong>Joined: </strong> {{ profile_user.date_joined.date }}
+            <br>
+            {% if profile_user.nationality %}
+                <strong>Nationality: {{ profile_user.nationality }}</strong>
+                <br>
+            {% endif %}
+            <strong>Followers: {{ profile_user.followers.count }}</strong>
+            <br>
+            <strong>Following: {{ profile_user.following.count }}</strong>
+            <br>
+            {% if user.is_authenticated %}
+            {% if user.username != profile_user.username %}
+                {% if user in profile_user.followers.all %}
+                    <form action="{% url 'follow_toggle' profile_user.username %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn-sm btn-primary">Unfollow</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'follow_toggle' profile_user.username %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn-sm btn-primary">Follow</button>
+                    </form>
+                {% endif %}
             {% endif %}
         {% endif %}
-    {% endif %}
+
+        </div>
+    </div>
+    
+
+
+
+
     <hr class="hr_light" id="hr">
     {% if not page_obj %}
         <strong style="font-size: 1.5rem">No posts yet.</strong>
@@ -39,8 +70,7 @@
                 <div class="col-lg-11">
                     <h5><a class="link_light link_class" href="{% url 'profile' post.creator %}">{{ post.creator }}</a></h5>
                     <div id="{{post.id}}">
-                        {{ post.post }}
-                        <br>
+                        <p style="white-space: pre-wrap;">{{ post.post }}</p>
                         <strong>{{ post.likes_count }} likes</strong>
                     </div>
                     {% if user.is_authenticated %}
@@ -68,12 +98,12 @@
         {% endfor %}
 
         <div id="edit_post" class="edit_post edit_box_light">
-            <span><strong style="float: left;">Edit this post</strong> <button id="cancel_edit_id" class="btn btn-light cancel_edit" style="float: right;">x</button></span>
+            <span><strong style="float: left; padding-left: 1%; padding-top: 1%">Edit this post</strong> <div style="padding-right: 1%; padding-top: 1%"><button id="cancel_edit_id" class="btn btn-light cancel_edit" style="float: right;">x</button></div></span>
             <br>
             <br>
-            <textarea style="height: 64%; width: 98%;" id="textarea_edit" class="textarea_light" required></textarea>
+            <textarea style="height: 64%; width: 98%; padding: 0.5%" id="textarea_edit" class="textarea_light" required></textarea>
             <br>
-            <button id="save_edit_id" style="width: 100%;" id="save_edit" class="btn btn-primary save_edit">Save</button>
+            <button id="save_edit_id" style="width: 98%;" id="save_edit" class="btn btn-primary save_edit">Save</button>
         </div>        
         
         <nav aria-label="Page navigation example">

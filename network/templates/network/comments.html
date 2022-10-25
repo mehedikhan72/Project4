@@ -9,7 +9,7 @@
     {% if user.is_authenticated %}
     <form action="{% url 'create_comment' post.id %}" method="POST">
         {% csrf_token %}
-        <textarea style="height: 30px; width: 100%;" id="textarea_id" class="textarea_light" name="comment" placeholder="Add a comment" required></textarea>
+        <textarea style="height: 30px; width: 100%; padding: 0.2%" id="textarea_id" class="textarea_light" name="comment" placeholder="Add a comment" required></textarea>
         <br>
         <input class="btn-sm btn-primary" style="width: 100%; text-align: center; padding-top: 0px" type="submit" value="Comment">
         <hr class="hr_light" id="hr">

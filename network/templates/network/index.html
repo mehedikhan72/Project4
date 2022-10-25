@@ -7,7 +7,7 @@
             {% csrf_token %}
             <strong class="center"><p>Create a post, {{ user.username }}!</p></strong>
 
-            <textarea id="textarea_id" class="textarea_light" name="post" required></textarea>
+            <textarea id="textarea_id" class="textarea_light" name="post" required style="white-space: pre-wrap; padding: 0.5%"></textarea>
             <br>
             <input class="btn btn-primary" style="width: 100%;" type="submit" value="Post">
             <hr class="hr_light" id="hr">
@@ -24,8 +24,7 @@
             <div class="col-lg-11">
                 <h5><a class="link_light link_class" href="{% url 'profile' post.creator %}">{{ post.creator }}</a></h5>
                 <div id="{{post.id}}">
-                    {{ post.post }}
-                    <br>
+                    <p style="white-space: pre-wrap;" >{{ post.post }}</p>
                     <strong>{{ post.likes_count }} likes</strong>
                 </div>
                 {% if user.is_authenticated %}
@@ -53,12 +52,12 @@
     {% endfor %}
 
     <div id="edit_post" class="edit_post edit_box_light">
-        <span><strong style="float: left;">Edit this post</strong> <button id="cancel_edit_id" class="btn btn-light cancel_edit" style="float: right;">x</button></span>
+        <span><strong style="float: left; padding-left: 1%; padding-top: 1%">Edit this post</strong> <div style="padding-right: 1%; padding-top: 1%"><button id="cancel_edit_id" class="btn btn-light cancel_edit" style="float: right;">x</button></div></span>
         <br>
         <br>
-        <textarea style="height: 64%; width: 98%;" id="textarea_edit" class="textarea_light" required></textarea>
+        <textarea style="height: 64%; width: 98%; padding: 0.5%" id="textarea_edit" class="textarea_light" required></textarea>
         <br>
-        <button id="save_edit_id" style="width: 100%;" id="save_edit" class="btn btn-primary save_edit">Save</button>
+        <button id="save_edit_id" style="width: 98%;" id="save_edit" class="btn btn-primary save_edit">Save</button>
     </div>
 
     <nav aria-label="Page navigation example">

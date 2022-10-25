@@ -15,8 +15,7 @@
                         <div class="col-lg-11">
                             <h5><a class="link_light link_class" href="{% url 'profile' post.creator %}">{{ post.creator }}</a></h5>
                             <div id="{{post.id}}">
-                                {{ post.post }}
-                                <br>
+                                <p style="white-space: pre-wrap;">{{ post.post }}</p>
                                 <strong>{{ post.likes_count }} likes</strong>
                             </div>
                             {% if user.is_authenticated %}

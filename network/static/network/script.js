@@ -241,8 +241,7 @@ function save_btn(post_id){
 
         e = document.getElementById(post_id);
         e.innerHTML = `<div id="${post.id}">
-                        ${new_content}
-                        <br>
+                        <p style="white-space: pre-wrap;">${new_content}</p>
                         <strong>${likes} likes</strong>
                       </div>`
     })
@@ -302,8 +301,7 @@ function add_like(post_id){
 
         e = document.getElementById(post_id);
         e.innerHTML = `<div id="${post.id}">
-                        ${new_content}
-                        <br>
+                        <p style="white-space: pre-wrap;">${new_content}</p>
                         <strong>${likes} likes</strong>
                       </div>`
 
@@ -334,8 +332,7 @@ function remove_like(post_id){
 
         e = document.getElementById(post_id);
         e.innerHTML = `<div id="${post.id}">
-                        ${new_content}
-                        <br>
+                        <p style="white-space: pre-wrap;">${new_content}</p>
                         <strong>${likes} likes</strong>
                       </div>`
         heart_btn = document.querySelectorAll('#heart_btn').forEach(btn =>{
